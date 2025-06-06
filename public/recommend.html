@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommend a Policy - Policy Predictor</title>
+    <link rel="stylesheet" href="css/recommend.css">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#317EFB">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="PolicyPredict">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+
+</head>
+<body>
+    <div class="container">
+        <!-- Left Panel: Recommendation UI (Centered) -->
+        <div class="recommend-box">
+            <h1>Policy Recommendation</h1>
+            <textarea id="userInput" placeholder="Describe your requirements..."></textarea>
+            <button onclick="getRecommendations()">Get Recommendations</button>
+
+            <div id="recommendations" style="display: none;">
+                <h2>Recommended Policies:</h2>
+                <ul id="policyList"></ul>
+                <button id="submitSelection" style="display: none;">Save Selection</button>
+            </div>
+        </div>
+
+        <!-- Right Panel: Chatbot -->
+        <div class="chatbox-container">
+            <iframe
+                src="https://www.chatbase.co/chatbot-iframe/N7ypLB_KMEig3ZTsuFH3G"
+                width="100%"
+                style="height: 100%; min-height: 700px"
+                frameborder="0"
+            ></iframe>
+        </div>
+    </div>
+
+    <script>
+        async function getRecommendations() {
+            const userInput = document.getElementById("userInput").value;
+            if (!userInput.trim()) {
+                alert("Please enter a description.");
+                return;
+            }
+
+            const res = await fetch('/api/recommend', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ description: userInput })
+            });
+
+            if (!res.ok) {
+                alert("Error fetching recommendations.");
+                return;
+            }
+
+            const policies = await res.json();
+            const policyList = document.getElementById("policyList");
+            policyList.innerHTML = "";
+            document.getElementById("recommendations").style.display = "block";            
+            policies.forEach(policy => {
+                const listItem = document.createElement("li");
+                listItem.innerHTML = `
+                    <div class="policy-item">
+                        <div class="policy-header">
+                            <input type="radio" name="selectedPolicy" value="${policy.name}">
+                            <span class="policy-name">${policy.name}</span>
+                        </div>
+                        <div class="policy-why-container">
+                            <h3 class="policy-why-heading">Why choose this policy:</h3>
+                            <div class="policy-description">${policy.why || 'No description available'}</div>
+                        </div>
+                    </div>
+                `;
+                policyList.appendChild(listItem);
+            });
+
+            document.getElementById("submitSelection").style.display = "block";
+        }
+
+        document.getElementById("submitSelection").addEventListener("click", async function() {
+            const selected = document.querySelector('input[name="selectedPolicy"]:checked');
+            if (!selected) return alert("Please select a policy.");
+
+            const res = await fetch('/api/select-policy-rec', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ policy: selected.value })
+            });
+
+            if (res.ok) alert("Policy selection saved!");
+            else alert("Error saving selection.");
+        });
+    </script>
+    <script>
+        (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="N7ypLB_KMEig3ZTsuFH3G";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
+    </script>
+</body>
+</html>
