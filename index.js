@@ -17,6 +17,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// Health check endpoint
+app.get('/healthz', (req, res) => {
+  console.log('Health check requested');
+  
+  res.status(200).send('OK');
+});
+
 // Initialize database
 initDB();
 
@@ -197,5 +204,6 @@ app.post('/api/logout', (req, res) => {
 // Start the server
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
+    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });
 
