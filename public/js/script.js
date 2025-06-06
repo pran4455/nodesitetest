@@ -107,66 +107,94 @@ document.addEventListener('DOMContentLoaded', async function() {
             alert("Policy selection saved!");
         });
     }
+
+    updateOnlineStatus();
 });
 
-// Add PWA installation handling
+// PWA Installation handling
 let deferredPrompt;
 let installPromptShown = false;
 
-// Check if the app is already installed
-const isAppInstalled = () => {
-    return window.matchMedia('(display-mode: standalone)').matches ||
-           window.navigator.standalone;
-};
-
-// Create and show the install prompt
-const showInstallPrompt = () => {
-    if (installPromptShown || isAppInstalled()) return;
-
-    const prompt = document.createElement('div');
-    prompt.className = 'install-prompt';
-    prompt.innerHTML = `
-        <p>Install Policy Predictor for a better experience!</p>
-        <button class="install-button" onclick="installPWA()">Install</button>
-        <button class="dismiss-button" onclick="dismissInstallPrompt()">Maybe Later</button>
-    `;
-    document.body.appendChild(prompt);
-    setTimeout(() => prompt.classList.add('show'), 100);
-    installPromptShown = true;
-};
-
-// Handle the installation
-const installPWA = async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const result = await deferredPrompt.userChoice;
-    if (result.outcome === 'accepted') {
-        console.log('PWA installation accepted');
-    }
-    deferredPrompt = null;
-    document.querySelector('.install-prompt')?.remove();
-};
-
-// Dismiss the install prompt
-const dismissInstallPrompt = () => {
-    const prompt = document.querySelector('.install-prompt');
-    if (prompt) {
-        prompt.classList.remove('show');
-        setTimeout(() => prompt.remove(), 300);
-    }
-};
-
-// Listen for the beforeinstallprompt event
+// PWA install prompt
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
     
-    // Show the prompt after a short delay
-    setTimeout(showInstallPrompt, 3000);
+    // Show install prompt after a short delay if not already shown
+    if (!installPromptShown && !localStorage.getItem('pwaInstallDismissed')) {
+        setTimeout(showInstallPrompt, 3000);
+    }
 });
 
-// Listen for successful installation
+// Handle successful installation
 window.addEventListener('appinstalled', () => {
-    console.log('PWA was installed');
-    dismissInstallPrompt();
+    installPromptShown = false;
+    deferredPrompt = null;
+    hideInstallPrompt();
+    // Track successful installation
+    localStorage.setItem('pwaInstalled', 'true');
 });
+
+// Show custom install prompt
+function showInstallPrompt() {
+    if (installPromptShown) return;
+    
+    const promptContainer = document.createElement('div');
+    promptContainer.id = 'pwa-install-prompt';
+    promptContainer.innerHTML = `
+        <div class="prompt-content">
+            <p>Install Policy Predictor for a better experience!</p>
+            <div class="prompt-buttons">
+                <button id="pwa-install-btn">Install</button>
+                <button id="pwa-dismiss-btn">Not Now</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(promptContainer);
+    installPromptShown = true;
+    
+    // Handle install button click
+    document.getElementById('pwa-install-btn').addEventListener('click', async () => {
+        hideInstallPrompt();
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        deferredPrompt = null;
+    });
+    
+    // Handle dismiss button click
+    document.getElementById('pwa-dismiss-btn').addEventListener('click', () => {
+        hideInstallPrompt();
+        localStorage.setItem('pwaInstallDismissed', 'true');
+    });
+}
+
+// Hide install prompt
+function hideInstallPrompt() {
+    const prompt = document.getElementById('pwa-install-prompt');
+    if (prompt) {
+        prompt.remove();
+        installPromptShown = false;
+    }
+}
+
+// Check online status and update UI
+function updateOnlineStatus() {
+    const statusIndicator = document.getElementById('online-status');
+    if (!statusIndicator) return;
+    
+    if (navigator.onLine) {
+        statusIndicator.textContent = '🟢 Online';
+        statusIndicator.classList.remove('offline');
+        statusIndicator.classList.add('online');
+    } else {
+        statusIndicator.textContent = '🔴 Offline';
+        statusIndicator.classList.remove('online');
+        statusIndicator.classList.add('offline');
+    }
+}
+
+// Listen for online/offline events
+window.addEventListener('online', updateOnlineStatus);
+window.addEventListener('offline', updateOnlineStatus);
