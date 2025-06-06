@@ -113,31 +113,24 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 // PWA Installation handling
 let deferredPrompt;
-let installPromptShown = false;
 
 // PWA install prompt
 window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent Chrome 67 and earlier from automatically showing the prompt
     e.preventDefault();
+    // Stash the event so it can be triggered later.
     deferredPrompt = e;
     
-    // Show install prompt after a short delay if not already shown
-    if (!installPromptShown && !localStorage.getItem('pwaInstallDismissed')) {
+    // Check if we should show the install prompt
+    if (!localStorage.getItem('pwaInstallDismissed')) {
+        // Show the prompt after a delay
         setTimeout(showInstallPrompt, 3000);
     }
 });
 
-// Handle successful installation
-window.addEventListener('appinstalled', () => {
-    installPromptShown = false;
-    deferredPrompt = null;
-    hideInstallPrompt();
-    // Track successful installation
-    localStorage.setItem('pwaInstalled', 'true');
-});
-
 // Show custom install prompt
 function showInstallPrompt() {
-    if (installPromptShown) return;
+    if (!deferredPrompt) return;
     
     const promptContainer = document.createElement('div');
     promptContainer.id = 'pwa-install-prompt';
@@ -152,20 +145,24 @@ function showInstallPrompt() {
     `;
     
     document.body.appendChild(promptContainer);
-    installPromptShown = true;
     
     // Handle install button click
     document.getElementById('pwa-install-btn').addEventListener('click', async () => {
+        // Hide the prompt
         hideInstallPrompt();
-        if (!deferredPrompt) return;
+        // Show the native prompt
         deferredPrompt.prompt();
+        // Wait for the user to respond to the prompt
         const { outcome } = await deferredPrompt.userChoice;
+        console.log(`User response to the install prompt: ${outcome}`);
+        // Clear the deferredPrompt variable as it can't be used again
         deferredPrompt = null;
     });
     
     // Handle dismiss button click
     document.getElementById('pwa-dismiss-btn').addEventListener('click', () => {
         hideInstallPrompt();
+        // Remember that user dismissed the prompt
         localStorage.setItem('pwaInstallDismissed', 'true');
     });
 }
@@ -175,11 +172,17 @@ function hideInstallPrompt() {
     const prompt = document.getElementById('pwa-install-prompt');
     if (prompt) {
         prompt.remove();
-        installPromptShown = false;
     }
 }
 
-// Check online status and update UI
+// Handle successful installation
+window.addEventListener('appinstalled', () => {
+    console.log('PWA was installed');
+    hideInstallPrompt();
+    localStorage.setItem('pwaInstalled', 'true');
+});
+
+// Online/Offline status handling
 function updateOnlineStatus() {
     const statusIndicator = document.getElementById('online-status');
     if (!statusIndicator) return;
@@ -198,3 +201,8 @@ function updateOnlineStatus() {
 // Listen for online/offline events
 window.addEventListener('online', updateOnlineStatus);
 window.addEventListener('offline', updateOnlineStatus);
+
+// Update status when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    updateOnlineStatus();
+});
