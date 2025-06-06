@@ -94,3 +94,77 @@ h2 {
     font-size: 22px;
     color: #333;
 }
+
+/* Media queries for responsive design */
+@media screen and (max-width: 768px) {
+    .container {
+        width: 90%;
+        max-width: none;
+        padding: 15px;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    button {
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .container {
+        width: 95%;
+        padding: 10px;
+    }
+
+    .form-group {
+        gap: 10px;
+    }
+
+    .button-group {
+        gap: 8px;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: linear-gradient(90deg, #4a2887, #b34d82);
+    }
+
+    .container {
+        background: rgba(0, 0, 0, 0.75);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    h2 {
+        color: #fff;
+    }
+
+    input {
+        background: rgba(0, 0, 0, 0.5);
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    input:focus {
+        border-color: #66b3ff;
+        box-shadow: 0 0 0 2px rgba(102, 179, 255, 0.25);
+    }
+
+    button {
+        background: #1a5928;
+    }
+
+    button:hover {
+        background: #13431e;
+    }
+}

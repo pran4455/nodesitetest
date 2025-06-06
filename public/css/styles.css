@@ -1,26 +1,100 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Arial, sans-serif;
     text-align: center;
-    
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #6d3cc5, #ff69b4);
+    box-sizing: border-box;
 }
 
 table {
-    width: 80%;
+    width: 90%;
+    max-width: 1200px;
     margin: 20px auto;
     border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 th, td {
-    padding: 10px;
-    border: 1px solid black;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
 }
 
 th {
-    background-color: #f4f4f4;
+    background-color: #007bff;
+    color: white;
+    font-weight: 600;
 }
 
 button {
-    padding: 10px 20px;
+    padding: 12px 24px;
     font-size: 16px;
     cursor: pointer;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+}
+
+/* Media queries for responsive design */
+@media screen and (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    table {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 14px;
+        width: 100%;
+        max-width: 300px;
+        margin: 5px auto;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: linear-gradient(135deg, #4a2887, #b34d82);
+    }
+
+    table {
+        background: rgba(0, 0, 0, 0.75);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    th {
+        background-color: #1a1a1a;
+    }
+
+    td {
+        color: white;
+        border-color: #333;
+    }
+
+    button {
+        background: #1a5928;
+    }
+
+    button:hover {
+        background: #13431e;
+    }
 }

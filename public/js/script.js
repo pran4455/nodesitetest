@@ -108,3 +108,65 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     }
 });
+
+// Add PWA installation handling
+let deferredPrompt;
+let installPromptShown = false;
+
+// Check if the app is already installed
+const isAppInstalled = () => {
+    return window.matchMedia('(display-mode: standalone)').matches ||
+           window.navigator.standalone;
+};
+
+// Create and show the install prompt
+const showInstallPrompt = () => {
+    if (installPromptShown || isAppInstalled()) return;
+
+    const prompt = document.createElement('div');
+    prompt.className = 'install-prompt';
+    prompt.innerHTML = `
+        <p>Install Policy Predictor for a better experience!</p>
+        <button class="install-button" onclick="installPWA()">Install</button>
+        <button class="dismiss-button" onclick="dismissInstallPrompt()">Maybe Later</button>
+    `;
+    document.body.appendChild(prompt);
+    setTimeout(() => prompt.classList.add('show'), 100);
+    installPromptShown = true;
+};
+
+// Handle the installation
+const installPWA = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const result = await deferredPrompt.userChoice;
+    if (result.outcome === 'accepted') {
+        console.log('PWA installation accepted');
+    }
+    deferredPrompt = null;
+    document.querySelector('.install-prompt')?.remove();
+};
+
+// Dismiss the install prompt
+const dismissInstallPrompt = () => {
+    const prompt = document.querySelector('.install-prompt');
+    if (prompt) {
+        prompt.classList.remove('show');
+        setTimeout(() => prompt.remove(), 300);
+    }
+};
+
+// Listen for the beforeinstallprompt event
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    
+    // Show the prompt after a short delay
+    setTimeout(showInstallPrompt, 3000);
+});
+
+// Listen for successful installation
+window.addEventListener('appinstalled', () => {
+    console.log('PWA was installed');
+    dismissInstallPrompt();
+});

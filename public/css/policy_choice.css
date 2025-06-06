@@ -56,3 +56,59 @@ h1 {
 .options button:last-child:hover {
     background: #218838;
 }
+
+/* Media Queries for Responsive Design */
+@media screen and (max-width: 768px) {
+    .container {
+        width: 90%;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
+
+    .options button {
+        font-size: 16px;
+        padding: 12px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .container {
+        width: 95%;
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .container {
+        background: rgba(0, 0, 0, 0.75);
+    }
+
+    h1 {
+        color: #fff;
+    }
+
+    .options button:first-child {
+        background: #0056b3;
+    }
+
+    .options button:first-child:hover {
+        background: #003d80;
+    }
+
+    .options button:last-child {
+        background: #1a7535;
+    }
+
+    .options button:last-child:hover {
+        background: #145a29;
+    }
+}

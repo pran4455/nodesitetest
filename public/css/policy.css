@@ -124,3 +124,90 @@ button[onclick="logout()"]:hover {
 tr:hover {
     background: rgba(0, 123, 255, 0.1);
 }
+
+/* Media queries for responsive design */
+@media screen and (max-width: 768px) {
+    #policyTable {
+        width: 100%;
+        margin: 10px auto;
+    }
+
+    th, td {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .description {
+        max-height: 2.8em;
+    }
+
+    #submitSelection, button[onclick="logout()"] {
+        width: 90%;
+        margin: 10px auto;
+        display: block;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    h1 {
+        font-size: 24px;
+        margin: 15px 0;
+    }
+
+    th {
+        font-size: 16px;
+    }
+
+    td {
+        font-size: 13px;
+    }
+
+    .select-btn {
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: linear-gradient(90deg, #4a2887, #b34d82);
+        color: #fff;
+    }
+
+    #policyTable {
+        background: rgba(0, 0, 0, 0.75);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    th {
+        background: #1a1a1a;
+        color: #fff;
+        border-right: 2px solid #333;
+    }
+
+    td {
+        color: #fff;
+        border-bottom: 2px solid #333;
+    }
+
+    td:nth-child(1), th:nth-child(1) {
+        border-right: 2px solid #333;
+    }
+
+    .read-more {
+        color: #66b3ff;
+    }
+
+    tr:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .select-btn {
+        background: #1a5928;
+    }
+
+    .select-btn:hover {
+        background: #13431e;
+    }
+}

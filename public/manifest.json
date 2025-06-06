@@ -6,6 +6,9 @@
   "background_color": "#ffffff",
   "theme_color": "#317EFB",
   "description": "Insurance Policy Prediction and Recommendation App",
+  "orientation": "portrait",
+  "scope": "/",
+  "categories": ["finance", "insurance"],
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
