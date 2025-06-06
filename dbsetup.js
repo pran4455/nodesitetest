@@ -6,7 +6,10 @@ const fs = require('fs');
 
 // Database initialization
 const initDB = () => {
-  const dbPath = path.join(__dirname, 'users.db');
+  // Use Render's persistent storage path if available, otherwise use local path
+  const dbPath = process.env.RENDER_STORAGE_PATH 
+    ? path.join(process.env.RENDER_STORAGE_PATH, 'users.db')
+    : path.join(__dirname, 'users.db');
   
   try {
     const db = new sqlite3.Database(dbPath, (err) => {

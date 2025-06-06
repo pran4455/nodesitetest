@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -8,15 +9,19 @@ const fs = require('fs');
 const { execFile } = require('child_process');
 const { getDB, initDB } = require('./dbsetup');
 const app = express();
-const port = 3000;
-const SECRET_KEY = "your_secret_key";
+const port = process.env.PORT || 3000;
+const SECRET_KEY = process.env.SECRET_KEY || "your_secret_key";
 
 app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-const pythonpath = "C:/Users/prana/anaconda3/envs/tds/python.exe";
+// Initialize database
+initDB();
+
+// Use system Python or specified path
+const pythonpath = process.env.PYTHON_VERSION ? "python3" : process.env.PYTHON_PATH || "python3";
 
 // Initialize database
 initDB();

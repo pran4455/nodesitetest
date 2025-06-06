@@ -1,4 +1,5 @@
 import sys
+import os
 import pandas as pd
 import sqlite3
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -11,7 +12,8 @@ import json
 
 def get_user_data(username):
     try:
-        conn = sqlite3.connect('users.db')
+        db_path = os.path.join(os.getenv('RENDER_STORAGE_PATH', ''), 'users.db') if os.getenv('RENDER_STORAGE_PATH') else 'users.db'
+        conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
         cursor.execute("""
             SELECT gender, age, marital_status, salary, balance
@@ -46,7 +48,8 @@ def clean_text(text):
     return text.strip()
 
 # Load data
-df = pd.read_excel("sbilife.xlsx")
+excel_path = os.path.join(os.path.dirname(__file__), "sbilife.xlsx")
+df = pd.read_excel(excel_path)
 
 # Clean policy names and descriptions
 df['Policies'] = df['Policies'].apply(clean_text)

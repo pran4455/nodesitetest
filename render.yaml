@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: policy-predictor
+    env: node
+    buildCommand: npm install && pip install -r requirements.txt
+    startCommand: chmod +x start.sh && ./start.sh
+    envVars:
+      - key: NODE_VERSION
+        value: 18.16.0
+      - key: PYTHON_VERSION
+        value: 3.8.0
+    disk:
+      name: data
+      mountPath: /data
+      sizeGB: 1
