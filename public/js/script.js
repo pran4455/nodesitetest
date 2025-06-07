@@ -120,17 +120,19 @@ window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     // Stash the event so it can be triggered later.
     deferredPrompt = e;
+    console.log('Install prompt event captured');
     
-    // Check if we should show the install prompt
-    if (!localStorage.getItem('pwaInstallDismissed')) {
-        // Show the prompt after a delay
-        setTimeout(showInstallPrompt, 3000);
-    }
+    // Always show the prompt (removing the localStorage check)
+    setTimeout(showInstallPrompt, 2000);
 });
 
 // Show custom install prompt
 function showInstallPrompt() {
+    console.log('Showing install prompt, deferredPrompt:', !!deferredPrompt);
     if (!deferredPrompt) return;
+    
+    // Remove any existing prompt
+    hideInstallPrompt();
     
     const promptContainer = document.createElement('div');
     promptContainer.id = 'pwa-install-prompt';
@@ -179,7 +181,9 @@ function hideInstallPrompt() {
 window.addEventListener('appinstalled', () => {
     console.log('PWA was installed');
     hideInstallPrompt();
-    localStorage.setItem('pwaInstalled', 'true');
+    // Clear localStorage to allow future install prompts
+    localStorage.removeItem('pwaInstalled');
+    localStorage.removeItem('pwaInstallDismissed');
 });
 
 // Online/Offline status handling
