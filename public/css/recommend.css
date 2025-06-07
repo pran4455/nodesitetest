@@ -6,16 +6,22 @@
 }
 
 /* General Styles */
-html, body {
+html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+body {
     font-family: 'Segoe UI', Arial, sans-serif;
     min-height: 100vh;
     width: 100%;
     display: flex;
     flex-direction: column;
     background: linear-gradient(135deg, #6d3cc5, #ff69b4);
-    overflow-x: hidden;
     position: relative;
-    -webkit-text-size-adjust: 100%;
+    line-height: 1.6;
+    overflow-x: hidden;
     overscroll-behavior-x: none;
 }
 
@@ -24,25 +30,23 @@ html, body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: max(1rem, 2vh);
-    width: 100%;
-    max-width: 1400px;
-    margin-inline: auto;
+    gap: 1rem;
+    width: min(100% - 2rem, 1400px);
+    margin: 0 auto;
     padding: 1rem;
 }
 
 /* Recommendation UI */
 .recommend-box {
     flex: 1 1 auto;
-    padding: max(1rem, 3vw);
+    padding: clamp(1rem, 3vw, 2rem);
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(15px);
     border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: max(0.5rem, 1vw);
+    border-radius: 0.5rem;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     width: 100%;
-    margin-bottom: max(1rem, 2vh);
-    min-width: 0;
+    margin-bottom: 1rem;
     overflow: hidden;
 }
 
@@ -57,33 +61,30 @@ html, body {
 #userInput {
     width: 100%;
     min-height: clamp(100px, 15vh, 200px);
-    padding: clamp(0.5rem, 1.5vw, 1rem);
+    max-height: 50vh;
+    padding: 0.75rem;
     border: 1px solid #ddd;
-    border-radius: clamp(0.25rem, 1vw, 0.5rem);
-    font-size: clamp(14px, 2vw, 16px);
+    border-radius: 0.5rem;
+    font-size: clamp(0.875rem, 2vw, 1rem);
+    line-height: 1.5;
     resize: vertical;
-    margin-bottom: clamp(1rem, 2vh, 1.5rem);
-    box-sizing: border-box;
-    max-width: 100%;
+    margin-bottom: 1rem;
 }
 
 /* Buttons */
 button {
-    padding: clamp(0.5rem, 2vw, 1rem) clamp(1rem, 3vw, 2rem);
-    font-size: clamp(14px, 2vw, 16px);
+    padding: 0.75rem 1.5rem;
+    font-size: clamp(0.875rem, 2vw, 1rem);
     border: none;
-    border-radius: clamp(0.25rem, 1vw, 0.5rem);
+    border-radius: 0.5rem;
     background: #317EFB;
     color: white;
     cursor: pointer;
     transition: background 0.3s ease;
     width: auto;
-    min-width: clamp(150px, 30vw, 200px);
+    min-width: min(200px, 100%);
     max-width: 100%;
-}
-
-button:hover {
-    background: #2668d9;
+    white-space: nowrap;
 }
 
 /* Policy List */
@@ -144,38 +145,40 @@ button:hover {
         gap: 2rem;
     }
 
-    .recommend-box {
-        flex: 1;
-        min-width: 0;
-        width: calc(50% - 1rem);
-        margin-bottom: 0;
-    }
-
+    .recommend-box,
     .chatbox-container {
         flex: 1;
-        min-width: 0;
         width: calc(50% - 1rem);
-        margin: 0;
+        min-width: 0;
+        max-width: calc(50% - 1rem);
     }
 }
 
 /* Tablet layout */
 @media (min-width: 768px) and (max-width: 1023px) {
     .container {
-        padding: max(1rem, 2vw);
+        padding: 1.5rem;
+        gap: 1.5rem;
     }
 
-    .recommend-box, .chatbox-container {
+    .recommend-box,
+    .chatbox-container {
+        width: 100%;
         max-width: 800px;
-        margin-left: auto;
-        margin-right: auto;
+        margin-inline: auto;
     }
 }
 
 /* Small screen optimizations */
 @media (max-width: 767px) {
+    html {
+        font-size: 14px;
+    }
+
     .container {
+        width: 100%;
         padding: 1rem;
+        gap: 1rem;
     }
 
     .recommend-box {
@@ -184,7 +187,6 @@ button:hover {
 
     button {
         width: 100%;
-        margin-bottom: 0.5rem;
     }
 
     .chatbox-container {
