@@ -1,39 +1,45 @@
+/* Reset default margins and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 /* General Styles */
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
-    margin: 0;
-    padding: 0;
     min-height: 100vh;
-    width: 100vw;
+    width: 100%;
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    flex-direction: column;
     background: linear-gradient(135deg, #6d3cc5, #ff69b4);
-    box-sizing: border-box;
     overflow-x: hidden;
+    position: relative;
 }
 
 /* Container for both sections */
 .container {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: clamp(1rem, 2vw, 2rem);
-    width: 90vw;
+    gap: max(1rem, 2vh);
+    width: 100%;
     max-width: 1200px;
-    margin: clamp(1rem, 2vh, 2rem) auto;
-    padding: clamp(0.5rem, 1vw, 1rem);
+    margin: 0 auto;
+    padding: max(1rem, 2vh) max(1rem, 2vw);
 }
 
 /* Recommendation UI */
 .recommend-box {
-    flex: 1;
-    padding: clamp(1rem, 3vw, 2rem);
+    flex: 1 1 auto;
+    padding: max(1rem, 3vw);
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(15px);
     border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: clamp(0.5rem, 2vw, 1rem);
+    border-radius: max(0.5rem, 1vw);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     width: 100%;
+    margin-bottom: max(1rem, 2vh);
 }
 
 .recommend-box h1 {
@@ -98,14 +104,16 @@ button:hover {
 /* Chatbox container */
 .chatbox-container {
     width: 100%;
-    height: clamp(300px, 60vh, 600px);
-    margin-top: clamp(1rem, 2vh, 2rem);
+    flex: 1 1 auto;
+    min-height: min(60vh, 600px);
+    max-height: 80vh;
 }
 
 .chatbox-container iframe {
     width: 100%;
     height: 100%;
-    border-radius: clamp(0.5rem, 2vw, 1rem);
+    border-radius: max(0.5rem, 1vw);
+    background: rgba(255, 255, 255, 0.95);
 }
 
 /* Online status indicator */
@@ -120,31 +128,53 @@ button:hover {
 }
 
 /* Layout adjustments for different screen sizes */
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
     .container {
         flex-direction: row;
-        flex-wrap: wrap;
+        align-items: stretch;
+        gap: max(2rem, 3vw);
     }
 
     .recommend-box {
-        flex: 1 1 45%;
-        min-width: 300px;
+        flex: 1 1 50%;
+        margin-bottom: 0;
     }
 
     .chatbox-container {
-        flex: 1 1 45%;
-        min-width: 300px;
+        flex: 1 1 50%;
+        margin: 0;
+    }
+}
+
+/* Tablet layout */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .container {
+        padding: max(1rem, 2vw);
+    }
+    
+    .recommend-box, .chatbox-container {
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
 /* Small screen optimizations */
-@media (max-width: 480px) {
+@media (max-width: 767px) {
     .container {
-        width: 95vw;
-        padding: 0.5rem;
+        padding: 1rem;
+    }
+    
+    .recommend-box {
+        padding: 1rem;
     }
     
     button {
         width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .chatbox-container {
+        min-height: 400px;
     }
 }
