@@ -22,25 +22,26 @@
     <div id="online-status"></div>    <div class="container">
         <!-- Recommendation UI -->
         <div class="recommend-box">
-            <h1>Policy Recommendation</h1>
-            <div class="input-section">
-                <textarea 
-                    id="userInput" 
-                    placeholder="Tell us about your insurance needs and requirements..."
-                    rows="4"
-                    style="height: auto"
-                ></textarea>
-                <button onclick="getRecommendations()" class="primary-action">Get Recommendations</button>
-            </div>
+        <h1>Policy Recommendation</h1>
 
-            <div id="recommendations" style="display: none;">
-                <h2>Recommended Policies</h2>
-                <div class="policy-list-container">
-                    <ul id="policyList"></ul>
-                    <button id="submitSelection" style="display: none;" class="save-action">Save Selection</button>
-                </div>
+        <div class="input-section">
+            <textarea 
+            id="userInput" 
+            placeholder="Tell us about your insurance needs..." 
+            rows="4">
+            </textarea>
+            <button onclick="getRecommendations()" class="primary-action">Get Recommendations</button>
+        </div>
+
+        <div id="recommendations" style="display: none;">
+            <h2>Recommended Policies</h2>
+            <div class="policy-list-container">
+            <ul id="policyList" style="list-style: none; padding: 0; margin: 0;"></ul>
+            <button id="submitSelection" style="display: none;" class="save-action">Save Selection</button>
             </div>
-        </div>        <!-- Chatbot -->
+        </div>
+        </div>
+        <!-- Chatbot -->
         <div class="chatbox-container">
             <iframe
                 src="https://www.chatbase.co/chatbot-iframe/N7ypLB_KMEig3ZTsuFH3G"

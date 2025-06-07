@@ -1,125 +1,87 @@
-/* Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  font-size: 16px;
-  -webkit-text-size-adjust: 100%;
-  -ms-text-size-adjust: 100%;
-}
-
-body {
-  font-family: 'Segoe UI', Arial, sans-serif;
-  min-height: 100vh;
-  width: 100%;
+.recommend-box {
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #6d3cc5, #ff69b4);
-  position: relative;
-  line-height: 1.6;
-  overflow-x: hidden;
-  overscroll-behavior-x: none;
-}
-
-/* Responsive grid container */
-.container {
-  display: grid;
-  grid-template-columns: 1fr;
   gap: 1rem;
-  width: min(100% - 2rem, 1400px);
-  margin: 0 auto;
-  padding: 1rem;
-}
-
-@media (min-width: 1024px) {
-  .container {
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-  }
-}
-
-/* Recommendation Box */
-.recommend-box {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  padding: clamp(1rem, 3vw, 2rem);
   width: 100%;
 }
 
 .recommend-box h1 {
-  font-size: clamp(1.5rem, 4vw, 2rem);
-  margin-bottom: 1rem;
-  color: #333;
-  font-weight: 600;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 0.5rem;
+  text-align: center;
 }
 
-/* Input Textarea */
+.input-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
 #userInput {
-  width: 100%;
-  min-height: clamp(100px, 15vh, 200px);
-  max-height: 50vh;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 0.5rem;
-  font-size: clamp(0.875rem, 2vw, 1rem);
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid #ccc;
   resize: vertical;
-  margin-bottom: 1rem;
+  min-height: 120px;
+  max-height: 250px;
+  line-height: 1.4;
+  background: #fafafa;
 }
 
-/* Buttons */
-button {
-  padding: 0.75rem 1.5rem;
-  font-size: clamp(0.875rem, 2vw, 1rem);
-  border: none;
-  border-radius: 0.5rem;
-  background: #317EFB;
+.primary-action {
+  background-color: #317EFB;
   color: white;
+  border: none;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  padding: 0.75rem;
+  font-size: 1rem;
+  width: 100%;
   cursor: pointer;
   transition: background 0.3s ease;
-  width: 100%;
-  white-space: nowrap;
 }
 
-button:hover {
-  background: #1e65d4;
+.primary-action:hover {
+  background-color: #245fd1;
 }
 
-/* Policy List Display */
-#recommendations {
-  margin-top: 1rem;
+#recommendations h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 
-#policyList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.policy-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
 }
 
 .policy-item {
-  background: white;
-  padding: clamp(0.75rem, 2vw, 1.5rem);
-  border-radius: clamp(0.25rem, 1vw, 0.5rem);
-  margin-bottom: clamp(0.5rem, 2vh, 1rem);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fdfdfd;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .policy-header {
   display: flex;
   align-items: center;
-  gap: clamp(0.5rem, 1vw, 1rem);
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
-.policy-why-container {
-  margin-top: 0.5rem;
-}
-
-.policy-why-heading {
+.policy-why-container h3 {
   font-size: 1rem;
   font-weight: 600;
   margin-bottom: 0.25rem;
@@ -127,86 +89,43 @@ button:hover {
 
 .policy-description {
   font-size: 0.95rem;
-  color: #444;
+  color: #333;
+  line-height: 1.4;
 }
 
-/* Scrollable policy container */
-.policy-list-container {
-  max-height: 40vh;
-  overflow-y: auto;
+.save-action {
   margin-top: 1rem;
-}
-
-/* Chatbox */
-.chatbox-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 300px;
-  max-height: 100%;
-  width: 100%;
-  overflow: hidden;
-}
-
-.chatbox-container iframe {
-  flex: 1;
-  width: 100%;
-  height: 100%;
-  border-radius: max(0.5rem, 1vw);
-  background: rgba(255, 255, 255, 0.95);
+  background-color: #4caf50;
+  color: #fff;
+  padding: 0.75rem;
   border: none;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  width: 100%;
 }
 
-/* Online status */
-#online-status {
-  position: fixed;
-  top: clamp(0.5rem, 1vh, 1rem);
-  right: clamp(0.5rem, 1vw, 1rem);
-  padding: clamp(0.25rem, 1vw, 0.5rem) clamp(0.5rem, 2vw, 1rem);
-  border-radius: 20px;
-  font-size: clamp(12px, 1.5vw, 14px);
-  z-index: 1000;
-  background: #fff;
-  color: #000;
+.save-action:hover {
+  background-color: #3e9142;
 }
 
-/* Tablet tweaks */
-@media (min-width: 768px) and (max-width: 1023px) {
-  .container {
-    padding: 1.5rem;
-  }
-
-  .policy-list-container {
-    max-height: 300px;
-  }
-}
-
-/* Mobile tweaks */
 @media (max-width: 767px) {
-  html {
-    font-size: 14px;
-  }
-
-  .container {
-    padding: 1rem;
-  }
-
   .recommend-box {
     padding: 1rem;
-  }
-
-  button {
-    width: 100%;
-  }
-
-  .chatbox-container {
-    min-height: 280px;
-  }
-
-  .policy-item {
-    font-size: 0.95rem;
+    border-radius: 0.75rem;
   }
 
   #userInput {
+    font-size: 0.95rem;
+  }
+
+  .policy-description {
+    font-size: 0.9rem;
+  }
+
+  .policy-header label {
     font-size: 1rem;
   }
 }
