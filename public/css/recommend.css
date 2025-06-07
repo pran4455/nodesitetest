@@ -1,11 +1,10 @@
-/* Reset default margins and padding */
+/* Reset */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* General Styles */
 html {
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
@@ -25,39 +24,42 @@ body {
   overscroll-behavior-x: none;
 }
 
-/* Container for both sections */
+/* Responsive grid container */
 .container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 1rem;
   width: min(100% - 2rem, 1400px);
   margin: 0 auto;
   padding: 1rem;
 }
 
-/* Recommendation UI */
+@media (min-width: 1024px) {
+  .container {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+}
+
+/* Recommendation Box */
 .recommend-box {
-  flex: 1 1 auto;
-  padding: clamp(1rem, 3vw, 2rem);
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(15px);
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 0.5rem;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  padding: clamp(1rem, 3vw, 2rem);
   width: 100%;
-  overflow: hidden;
 }
 
 .recommend-box h1 {
   font-size: clamp(1.5rem, 4vw, 2rem);
-  margin: clamp(0.5rem, 2vh, 1rem) 0;
+  margin-bottom: 1rem;
   color: #333;
   font-weight: 600;
 }
 
-/* Text Area */
+/* Input Textarea */
 #userInput {
   width: 100%;
   min-height: clamp(100px, 15vh, 200px);
@@ -66,7 +68,6 @@ body {
   border: 1px solid #ddd;
   border-radius: 0.5rem;
   font-size: clamp(0.875rem, 2vw, 1rem);
-  line-height: 1.5;
   resize: vertical;
   margin-bottom: 1rem;
 }
@@ -82,15 +83,22 @@ button {
   cursor: pointer;
   transition: background 0.3s ease;
   width: 100%;
-  max-width: 100%;
   white-space: nowrap;
 }
 
-/* Policy List */
+button:hover {
+  background: #1e65d4;
+}
+
+/* Policy List Display */
+#recommendations {
+  margin-top: 1rem;
+}
+
 #policyList {
   list-style: none;
   padding: 0;
-  margin: clamp(1rem, 3vh, 2rem) 0;
+  margin: 0;
 }
 
 .policy-item {
@@ -107,26 +115,48 @@ button {
   gap: clamp(0.5rem, 1vw, 1rem);
 }
 
-/* Chatbox container */
+.policy-why-container {
+  margin-top: 0.5rem;
+}
+
+.policy-why-heading {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.policy-description {
+  font-size: 0.95rem;
+  color: #444;
+}
+
+/* Scrollable policy container */
+.policy-list-container {
+  max-height: 40vh;
+  overflow-y: auto;
+  margin-top: 1rem;
+}
+
+/* Chatbox */
 .chatbox-container {
-  width: 100%;
-  flex: 1 1 auto;
-  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
   max-height: 100%;
-  min-width: 0;
+  width: 100%;
   overflow: hidden;
 }
 
 .chatbox-container iframe {
+  flex: 1;
   width: 100%;
   height: 100%;
-  display: block;
   border-radius: max(0.5rem, 1vw);
   background: rgba(255, 255, 255, 0.95);
   border: none;
 }
 
-/* Online status indicator */
+/* Online status */
 #online-status {
   position: fixed;
   top: clamp(0.5rem, 1vh, 1rem);
@@ -139,42 +169,18 @@ button {
   color: #000;
 }
 
-/* Layout adjustments for large screens */
-@media (min-width: 1024px) {
-  .container {
-    flex-direction: row;
-    align-items: stretch;
-    gap: 2rem;
-  }
-
-  .recommend-box,
-  .chatbox-container {
-    flex: 1 1 50%;
-    width: calc(50% - 1rem);
-    max-width: calc(50% - 1rem);
-  }
-
-  button {
-    width: auto;
-  }
-}
-
-/* Tablet layout */
+/* Tablet tweaks */
 @media (min-width: 768px) and (max-width: 1023px) {
   .container {
     padding: 1.5rem;
-    gap: 1.5rem;
-    flex-direction: column;
   }
 
-  .recommend-box,
-  .chatbox-container {
-    width: 100%;
-    max-width: 100%;
+  .policy-list-container {
+    max-height: 300px;
   }
 }
 
-/* Small screen optimizations */
+/* Mobile tweaks */
 @media (max-width: 767px) {
   html {
     font-size: 14px;
@@ -182,7 +188,6 @@ button {
 
   .container {
     padding: 1rem;
-    gap: 1rem;
   }
 
   .recommend-box {
@@ -194,7 +199,7 @@ button {
   }
 
   .chatbox-container {
-    min-height: 360px;
+    min-height: 280px;
   }
 
   .policy-item {
