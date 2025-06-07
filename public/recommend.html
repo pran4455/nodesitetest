@@ -19,24 +19,36 @@
     <link rel="stylesheet" href="./css/install-prompt.css">
 </head>
 <body>
-    <div id="online-status"></div>
-    <div class="container">
+    <div id="online-status"></div>    <div class="container">
         <!-- Recommendation UI -->
         <div class="recommend-box">
             <h1>Policy Recommendation</h1>
-            <div class="input-container">
-                <textarea id="userInput" 
-                    placeholder="Tell us about your insurance needs and requirements..." 
+            <div class="input-section">
+                <textarea 
+                    id="userInput" 
+                    placeholder="Tell us about your insurance needs and requirements..."
                     rows="4"
-                    data-mobile-rows="3"
+                    style="height: auto"
                 ></textarea>
-                <button onclick="getRecommendations()" class="primary-button">Get Recommendations</button>
+                <button onclick="getRecommendations()" class="primary-action">Get Recommendations</button>
             </div>
 
             <div id="recommendations" style="display: none;">
                 <h2>Recommended Policies</h2>
-                <ul id="policyList" class="policy-list"></ul>
+                <div class="policy-list-container">
+                    <ul id="policyList"></ul>
+                    <button id="submitSelection" style="display: none;" class="save-action">Save Selection</button>
+                </div>
             </div>
+        </div>        <!-- Chatbot -->
+        <div class="chatbox-container">
+            <iframe
+                src="https://www.chatbase.co/chatbot-iframe/N7ypLB_KMEig3ZTsuFH3G"
+                width="100%"
+                style="height: 100%; border: none; border-radius: clamp(0.5rem, 2vw, 1rem);"
+                frameborder="0"
+                title="Insurance Policy Chatbot"
+            ></iframe>
         </div>
     </div>
 
@@ -141,24 +153,9 @@
         window.addEventListener('online', updateOnlineStatus);
         window.addEventListener('offline', updateOnlineStatus);
         document.addEventListener('DOMContentLoaded', updateOnlineStatus);
-
-        // Device detection
-        function isMobileDevice() {
-            return (window.innerWidth <= 767);
-        }
-
-        // Adjust textarea rows based on device
-        function adjustTextarea() {
-            const textarea = document.getElementById('userInput');
-            if (textarea) {
-                textarea.rows = isMobileDevice() ? 
-                    parseInt(textarea.getAttribute('data-mobile-rows')) : 4;
-            }
-        }
-
-        // Call on load and resize
-        window.addEventListener('load', adjustTextarea);
-        window.addEventListener('resize', adjustTextarea);
+    </script>
+    <script>
+        (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="N7ypLB_KMEig3ZTsuFH3G";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
     </script>
 </body>
 </html>
