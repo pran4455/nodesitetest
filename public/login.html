@@ -15,21 +15,24 @@
     
     <!-- Stylesheets -->
     <link rel="stylesheet" href="./css/login.css">
-    <link rel="stylesheet" href="./css/install-prompt.css">
-    
-    <!-- Service Worker Registration -->
+    <link rel="stylesheet" href="./css/install-prompt.css">    <!-- PWA Setup Scripts -->
+    <script src="./js/register-sw.js"></script>
+    <script src="./js/pwa-debug.js"></script>
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', async () => {
-                try {
-                    const registration = await navigator.serviceWorker.register('./service-worker.js', {
-                        scope: './'
-                    });
-                    console.log('ServiceWorker registration successful with scope:', registration.scope);
-                } catch (err) {
-                    console.error('ServiceWorker registration failed:', err);
-                }
-            });
+        // PWA Status Check
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            pwaDebug.log('Running as installed PWA');
+        }
+        
+        // Listen for PWA display mode changes
+        window.matchMedia('(display-mode: standalone)').addEventListener('change', (evt) => {
+            pwaDebug.log('Display mode changed: ' + (evt.matches ? 'PWA' : 'Browser'));
+        });
+        
+        // Force reload on first PWA launch
+        if (window.matchMedia('(display-mode: standalone)').matches && !sessionStorage.getItem('pwaLoaded')) {
+            sessionStorage.setItem('pwaLoaded', 'true');
+            window.location.reload();
         }
     </script>
 </head>

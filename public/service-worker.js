@@ -1,6 +1,11 @@
-const CACHE_NAME = 'policy-predictor-v1';
-const STATIC_CACHE = 'static-cache-v1';
-const DYNAMIC_CACHE = 'dynamic-cache-v1';
+const CACHE_NAME = 'policy-predictor-v2'; // Increment version
+const STATIC_CACHE = 'static-cache-v2';
+const DYNAMIC_CACHE = 'dynamic-cache-v2';
+
+// Debug logging
+self.addEventListener('activate', event => {
+  console.log('Service Worker activated');
+});
 
 const urlsToCache = [
   './',
@@ -25,13 +30,20 @@ const urlsToCache = [
 
 // Install event - cache static assets
 self.addEventListener('install', event => {
+  console.log('Service Worker installing');
   event.waitUntil(
     caches.open(STATIC_CACHE)
       .then(cache => {
-        console.log('Opened cache');
+        console.log('Caching app shell');
         return cache.addAll(urlsToCache);
       })
-      .then(() => self.skipWaiting()) // Ensure new service worker activates immediately
+      .then(() => {
+        console.log('Service Worker installation complete');
+        return self.skipWaiting(); // Ensure new service worker activates immediately
+      })
+      .catch(error => {
+        console.error('Service Worker installation failed:', error);
+      })
   );
 });
 

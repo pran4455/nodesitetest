@@ -114,95 +114,110 @@ document.addEventListener('DOMContentLoaded', async function() {
 // PWA Installation handling
 let deferredPrompt;
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+console.log('Script loaded, checking for installation capability');
 
-// Show installation instructions based on device
-function showInstallInstructions() {
-    const container = document.createElement('div');
-    container.id = 'install-instructions';
-    container.style.position = 'fixed';
-    container.style.bottom = '20px';
-    container.style.left = '50%';
-    container.style.transform = 'translateX(-50%)';
-    container.style.backgroundColor = 'white';
-    container.style.padding = '15px';
-    container.style.borderRadius = '10px';
-    container.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
-    container.style.zIndex = '1000';
-    container.style.maxWidth = '90%';
-    container.style.width = '300px';
-    
-    if (isIOS) {
-        container.innerHTML = `
-            <p style="margin: 0 0 10px">Install this app on your iPhone:</p>
-            <ol style="margin: 0; padding-left: 20px">
-                <li>Tap the Share button</li>
-                <li>Tap "Add to Home Screen"</li>
-            </ol>
-            <button onclick="this.parentElement.remove()" style="margin-top: 10px">Got it</button>
-        `;
-    }
-    
-    document.body.appendChild(container);
-}
+// Create install button
+function createInstallButton() {
+    const existingButton = document.getElementById('install-button');
+    if (existingButton) return;
 
-// PWA install prompt
-window.addEventListener('beforeinstallprompt', (e) => {
-    console.log('beforeinstallprompt event fired');
-    e.preventDefault();
-    deferredPrompt = e;
-    
-    // Show install button
+    console.log('Creating install button');
     const installButton = document.createElement('button');
     installButton.id = 'install-button';
     installButton.textContent = 'Install App';
-    installButton.className = 'install-button';
-    
-    // Style the button
     Object.assign(installButton.style, {
         position: 'fixed',
         bottom: '20px',
         right: '20px',
-        padding: '12px 24px',
         backgroundColor: '#317EFB',
         color: 'white',
+        padding: '12px 24px',
         border: 'none',
         borderRadius: '8px',
         cursor: 'pointer',
-        zIndex: '1000',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-        fontSize: '16px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+        zIndex: 1000,
+        fontFamily: 'Arial, sans-serif',
+        boxShadow: '0 2px 6px rgba(0,0,0,0.2)'
     });
     
-    installButton.addEventListener('click', async () => {
-        if (!deferredPrompt) return;
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        console.log(`User response to the install prompt: ${outcome}`);
-        deferredPrompt = null;
-        installButton.remove();
-    });
+    if (deferredPrompt) {
+        installButton.addEventListener('click', installPWA);
+    } else if (isIOS) {
+        installButton.addEventListener('click', showIOSInstructions);
+    }
     
     document.body.appendChild(installButton);
-});
-
-// Handle iOS devices
-if (isIOS) {
-    // Show iOS installation instructions if not already installed
-    if (!window.navigator.standalone) {
-        // Don't show immediately on iOS, wait a bit
-        setTimeout(showInstallInstructions, 5000);
-    }
 }
 
+// Installation function
+async function installPWA() {
+    console.log('Install button clicked, deferredPrompt:', !!deferredPrompt);
+    if (!deferredPrompt) return;
+    
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log('Installation outcome:', outcome);
+    deferredPrompt = null;
+    
+    const button = document.getElementById('install-button');
+    if (button) button.remove();
+}
+
+// Show iOS instructions
+function showIOSInstructions() {
+    const instructionsDiv = document.createElement('div');
+    instructionsDiv.id = 'ios-instructions';
+    Object.assign(instructionsDiv.style, {
+        position: 'fixed',
+        bottom: '80px',
+        right: '20px',
+        backgroundColor: 'white',
+        padding: '15px',
+        borderRadius: '8px',
+        boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
+        zIndex: 1000,
+        maxWidth: '250px'
+    });
+    
+    instructionsDiv.innerHTML = `
+        <p style="margin: 0 0 10px">To install this app:</p>
+        <ol style="margin: 0; padding-left: 20px">
+            <li>Tap the share button <span style="margin: 0 5px">📤</span></li>
+            <li>Select "Add to Home Screen" <span style="margin: 0 5px">📱</span></li>
+        </ol>
+        <button onclick="this.parentElement.remove()" 
+                style="margin-top: 10px; padding: 5px 10px; border: none; 
+                       background: #eee; border-radius: 4px; width: 100%">
+            Got it
+        </button>
+    `;
+    
+    document.body.appendChild(instructionsDiv);
+}
+
+// Listen for installation capability
+window.addEventListener('beforeinstallprompt', (e) => {
+    console.log('beforeinstallprompt event fired');
+    e.preventDefault();
+    deferredPrompt = e;
+    createInstallButton();
+});
+
+// Check on page load
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, checking installation status');
+    if (isIOS) {
+        createInstallButton();
+    }
+});
+
 // Handle successful installation
-window.addEventListener('appinstalled', () => {
+window.addEventListener('appinstalled', (e) => {
     console.log('PWA was installed');
-    // Remove any install UI elements
-    const installButton = document.getElementById('install-button');
-    const installInstructions = document.getElementById('install-instructions');
-    if (installButton) installButton.remove();
-    if (installInstructions) installInstructions.remove();
+    const button = document.getElementById('install-button');
+    const instructions = document.getElementById('ios-instructions');
+    if (button) button.remove();
+    if (instructions) instructions.remove();
 });
 
 // Online/Offline status handling
