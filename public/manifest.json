@@ -1,19 +1,14 @@
-{
-  "name": "Policy Predictor",
+{  "name": "Policy Predictor",
   "short_name": "PolicyPredict",
-  "start_url": "./login.html",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#317EFB",
   "description": "Insurance Policy Prediction and Recommendation App",
-  "orientation": "portrait",
-  "scope": "./",
+  "orientation": "any",
+  "scope": "/",
   "categories": ["finance", "insurance"],
   "prefer_related_applications": false,
-  "lang": "en",
-  "dir": "ltr",
-  "id": "/login.html",
-  "display_override": ["standalone", "browser"],
   "icons": [
     {
       "src": "/icons/icon-192x192.png",

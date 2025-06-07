@@ -113,77 +113,96 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 // PWA Installation handling
 let deferredPrompt;
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+// Show installation instructions based on device
+function showInstallInstructions() {
+    const container = document.createElement('div');
+    container.id = 'install-instructions';
+    container.style.position = 'fixed';
+    container.style.bottom = '20px';
+    container.style.left = '50%';
+    container.style.transform = 'translateX(-50%)';
+    container.style.backgroundColor = 'white';
+    container.style.padding = '15px';
+    container.style.borderRadius = '10px';
+    container.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+    container.style.zIndex = '1000';
+    container.style.maxWidth = '90%';
+    container.style.width = '300px';
+    
+    if (isIOS) {
+        container.innerHTML = `
+            <p style="margin: 0 0 10px">Install this app on your iPhone:</p>
+            <ol style="margin: 0; padding-left: 20px">
+                <li>Tap the Share button</li>
+                <li>Tap "Add to Home Screen"</li>
+            </ol>
+            <button onclick="this.parentElement.remove()" style="margin-top: 10px">Got it</button>
+        `;
+    }
+    
+    document.body.appendChild(container);
+}
 
 // PWA install prompt
 window.addEventListener('beforeinstallprompt', (e) => {
-    // Prevent Chrome 67 and earlier from automatically showing the prompt
+    console.log('beforeinstallprompt event fired');
     e.preventDefault();
-    // Stash the event so it can be triggered later.
     deferredPrompt = e;
-    console.log('Install prompt event captured');
     
-    // Always show the prompt (removing the localStorage check)
-    setTimeout(showInstallPrompt, 2000);
-});
-
-// Show custom install prompt
-function showInstallPrompt() {
-    console.log('Showing install prompt, deferredPrompt:', !!deferredPrompt);
-    if (!deferredPrompt) return;
+    // Show install button
+    const installButton = document.createElement('button');
+    installButton.id = 'install-button';
+    installButton.textContent = 'Install App';
+    installButton.className = 'install-button';
     
-    // Remove any existing prompt
-    hideInstallPrompt();
+    // Style the button
+    Object.assign(installButton.style, {
+        position: 'fixed',
+        bottom: '20px',
+        right: '20px',
+        padding: '12px 24px',
+        backgroundColor: '#317EFB',
+        color: 'white',
+        border: 'none',
+        borderRadius: '8px',
+        cursor: 'pointer',
+        zIndex: '1000',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+        fontSize: '16px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+    });
     
-    const promptContainer = document.createElement('div');
-    promptContainer.id = 'pwa-install-prompt';
-    promptContainer.innerHTML = `
-        <div class="prompt-content">
-            <p>Install Policy Predictor for a better experience!</p>
-            <div class="prompt-buttons">
-                <button id="pwa-install-btn">Install</button>
-                <button id="pwa-dismiss-btn">Not Now</button>
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(promptContainer);
-    
-    // Handle install button click
-    document.getElementById('pwa-install-btn').addEventListener('click', async () => {
-        // Hide the prompt
-        hideInstallPrompt();
-        // Show the native prompt
+    installButton.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
         deferredPrompt.prompt();
-        // Wait for the user to respond to the prompt
         const { outcome } = await deferredPrompt.userChoice;
         console.log(`User response to the install prompt: ${outcome}`);
-        // Clear the deferredPrompt variable as it can't be used again
         deferredPrompt = null;
+        installButton.remove();
     });
     
-    // Handle dismiss button click
-    document.getElementById('pwa-dismiss-btn').addEventListener('click', () => {
-        hideInstallPrompt();
-        // Remember that user dismissed the prompt
-        localStorage.setItem('pwaInstallDismissed', 'true');
-    });
-}
+    document.body.appendChild(installButton);
+});
 
-// Hide install prompt
-function hideInstallPrompt() {
-    const prompt = document.getElementById('pwa-install-prompt');
-    if (prompt) {
-        prompt.remove();
+// Handle iOS devices
+if (isIOS) {
+    // Show iOS installation instructions if not already installed
+    if (!window.navigator.standalone) {
+        // Don't show immediately on iOS, wait a bit
+        setTimeout(showInstallInstructions, 5000);
     }
 }
 
 // Handle successful installation
 window.addEventListener('appinstalled', () => {
     console.log('PWA was installed');
-    hideInstallPrompt();
-    // Clear localStorage to allow future install prompts
-    localStorage.removeItem('pwaInstalled');
-    localStorage.removeItem('pwaInstallDismissed');
+    // Remove any install UI elements
+    const installButton = document.getElementById('install-button');
+    const installInstructions = document.getElementById('install-instructions');
+    if (installButton) installButton.remove();
+    if (installInstructions) installInstructions.remove();
 });
 
 // Online/Offline status handling
